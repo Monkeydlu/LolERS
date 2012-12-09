@@ -12,6 +12,7 @@
 #import "CCTouchDispatcher.h"
 #import "GameConfig.h"
 #import "SimpleAudioEngine.h"
+#import "CutScene.h"
 #import "GameOverScene.h"
 
 
@@ -49,44 +50,18 @@
 - (void)cleanUpCardGraphics;
 - (void)cleanUpNotice;
 - (void)checkForGameOver;
+- (void)setUpGame;
+- (void) asheSelectedLoadCutScene;
+- (void) malphiteSelectedLoadCutScene;
 
 @end
 
 // ErsGameScene implementation
 @implementation ErsGameLayer
 
-@synthesize topDeck = topDeck;
-@synthesize botDeck = botDeck;
-@synthesize topMaxHealth = topMaxHealth;
-@synthesize botMaxHealth = botMaxHealth;
-@synthesize topCurHealth = topCurHealth;
-@synthesize botCurHealth = botCurHealth;
-@synthesize topHealthLabel = topHealthLabel;
-@synthesize botHealthLabel = botHealthLabel;
-@synthesize topDeckLabel = topDeckLabel;
-@synthesize botDeckLabel = botDeckLabel;
-@synthesize topDamageModifier = topDamageModifier;
-@synthesize botDamageModifier = botDamageModifier;
-@synthesize topName = topName;
-@synthesize botName = botName;
-
-
-/*
-+(CCScene *) scene
-{
-	// 'scene' is an autorelease object.
-	CCScene *scene = [CCScene node];
-	
-	// 'layer' is an autorelease object.
-	ErsGameScene *layer = [ErsGameScene node];
-	
-	// add layer as a child to scene
-	[scene addChild: layer];
-	
-	// return the scene
-	return scene;
-}
- */
+@synthesize loadingSplashScreen = loadingSplashScreen;
+@synthesize characterSelected = characterSelected;
+@synthesize currentStageLevel = currentStageLevel;
 
 // on "init" you need to initialize your instance
 -(id) init
@@ -102,19 +77,16 @@
 		
 		int count = [myDeck count]; 
 		
-		 for (int i = 1; i < count; ++i) {
-		 int j = arc4random() % i;
-		 [myDeck exchangeObjectAtIndex:j withObjectAtIndex:i];
-		 }
-		//*/
-		/*
-		myDeck = [NSMutableArray arrayWithObjects:	
-				  @"S2.gif", @"S2.gif", @"S2.gif", @"S5.gif", @"S6.gif", @"S7.gif", @"S8.gif", @"S9.gif", @"ST.gif", @"SJ.gif", @"SQ.gif", @"SK.gif", @"SA.gif", 
-				  @"D2.gif", @"D3.gif", @"D4.gif", @"D5.gif", @"D6.gif", @"D7.gif", @"D8.gif", @"D9.gif", @"DT.gif", @"DJ.gif", @"DQ.gif", @"DK.gif", @"DA.gif",
-				  @"C4.gif", @"C6.gif", @"C3.gif", @"CJ.gif", @"C6.gif", @"C7.gif", @"C8.gif", @"C9.gif", @"CT.gif", @"CJ.gif", @"CQ.gif", @"CK.gif", @"CA.gif", 
-				  @"H2.gif", @"H3.gif", @"H4.gif", @"H5.gif", @"H6.gif", @"H7.gif", @"H8.gif", @"H9.gif", @"HT.gif", @"HJ.gif", @"HQ.gif", @"HK.gif", @"HA.gif", nil];
-		int count = [myDeck count]; 
-		*/
+		for (int i = 1; i < count; ++i) {
+			int j = arc4random() % i;
+			[myDeck exchangeObjectAtIndex:j withObjectAtIndex:i];
+		}
+		
+		for (int i = 1; i < count; ++i) {
+			int j = arc4random() % i;
+			[myDeck exchangeObjectAtIndex:j withObjectAtIndex:i];
+		}
+
 		topDeck = [[NSMutableArray alloc] init];
 		botDeck = [[NSMutableArray alloc] init];
 		cardStackGraphics = [[NSMutableArray alloc] init];
@@ -135,26 +107,20 @@
 		royalPlayed = false;
 		playerSlapped = false;
 		playerFlipButtonActive = true;
+		gameNotSetUp = true;
 		cardAngle = 0;
 		delay = 0.9;
-		
-		/*
-		topMaxHealth = 0;
-		topCurHealth = topMaxHealth;
-		botMaxHealth = 0;
-		botCurHealth = botMaxHealth;
-		topDamageModifier = 2;
-		botDamageModifier = 2;
-		*/
-		
-		computerFlipCardSelector = @selector(computerFlipCard);
-		royalCardCollectSelector = @selector(royalCardCollect);
-		compSlapCardSelector = @selector(compSlapCard);
-		cleanUpNoticeSelector = @selector(cleanUpNotice);
 		
 		[[SimpleAudioEngine sharedEngine] preloadEffect:@"click.caf"];
 		
 		CGSize winSize = [[CCDirector sharedDirector] winSize];
+		
+		topBustImage = [CCSprite spriteWithFile:@"MinionBust.png"];
+		topBustImage.position = ccp(70, 170);
+		[self addChild:topBustImage];
+		botBustImage = [CCSprite spriteWithFile:@"MinionBust.png"];
+		botBustImage.position = ccp(410, 170);
+		[self addChild:botBustImage];
 		
 		flipButton = [CCSprite spriteWithFile:@"FlipUp.png"];
 		flipButton.position = ccp(winSize.width - 70, 40);
@@ -163,16 +129,7 @@
 		slapButton = [CCSprite spriteWithFile:@"SlapUp.png"];
 		slapButton.position = ccp(70, 40);
 		[self addChild:slapButton];
-		/*
-		flipButtonTop = [CCSprite spriteWithFile:@"flip.jpeg"];
-		flipButtonTop.position = ccp(70, winSize.height - 40);
-		[self addChild:flipButtonTop];
-		
-		slapButtonTop = [CCSprite spriteWithFile:@"slap.jpeg"];
-		slapButtonTop.position = ccp(winSize.width - 70, winSize.height - 40);
-		[self addChild:slapButtonTop];
-		*/
-		
+
 		topDeckLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%@: %u", topName, [topDeck count]] fontName:@"Arial" fontSize:20];
 		topDeckLabel.color = ccc3(0, 0, 0);
 		[topDeckLabel setPosition: ccp(70, 300)];
@@ -203,6 +160,19 @@
 		[botHealthLabel setPosition: ccp(winSize.width - 70, 275)];
 		[self addChild:botHealthLabel];
 		
+		topHealth = [CCProgressTimer progressWithFile:@"healthBarGreen.png"];
+		topHealth.type = kCCProgressTimerTypeHorizontalBarLR;
+		topHealth.percentage = 100;
+		topHealth.position = ccp(70, 250);
+		[self addChild:topHealth];
+		
+		botHealth = [CCProgressTimer progressWithFile:@"healthBarGreen.png"];
+		botHealth.type = kCCProgressTimerTypeHorizontalBarLR;
+		botHealth.percentage = 100;
+		botHealth.position = ccp(winSize.width - 70, 250);
+		[self addChild:botHealth];
+		
+		
 	}
 	
 	NSLog (@"myDeck : %u", [myDeck count]);
@@ -213,11 +183,71 @@
 	return self;
 }
 
+
 - (void)registerWithTouchDispatcher {
 	[[CCTouchDispatcher sharedDispatcher] addTargetedDelegate:self priority:0 swallowsTouches:YES];
 }
 
+- (void)setUpGame{
+	[self removeChild:loadingSplashScreen cleanup:YES];
+	
+	if (currentStageLevel == 1) {
+		topName = @"Minion";
+		topMaxHealth = 50;
+		topCurHealth = 50;
+		topDamageModifier = 2;
+		delay = 0.9;
+		[topBustImage setTexture:[[CCSprite spriteWithFile:@"MinionBust.png"]texture]];
+		[topHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", topCurHealth, topMaxHealth]];
+		[topDeckLabel setString:[NSString stringWithFormat:@"%@: %u", topName, [topDeck count]]];
+	}
+	
+	if (currentStageLevel == 2 && characterSelected == @"Ashe") {
+		topName = @"Malphite";
+		topMaxHealth = 70;
+		topCurHealth = 70;
+		topDamageModifier = 1.5;
+		delay = 0.7;
+		[topBustImage setTexture:[[CCSprite spriteWithFile:@"MalphiteBust.png"]texture]];
+		[topHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", topCurHealth, topMaxHealth]];
+		[topDeckLabel setString:[NSString stringWithFormat:@"%@: %u", topName, [topDeck count]]];
+	}
+	
+	if (currentStageLevel == 2 && characterSelected == @"Malphite") {
+		topName = @"Malphite";
+		topMaxHealth = 35;
+		topCurHealth = 35;
+		topDamageModifier = 2.5;
+		delay = 0.7;
+		[topBustImage setTexture:[[CCSprite spriteWithFile:@"AsheBust.png"]texture]];
+		[topHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", topCurHealth, topMaxHealth]];
+		[topDeckLabel setString:[NSString stringWithFormat:@"%@: %u", topName, [topDeck count]]];
+	}
+	
+	if (characterSelected == @"Ashe") {
+		botName = @"Ashe";
+		botMaxHealth = 35;
+		botCurHealth = 35;
+		botDamageModifier = 2.5;
+		[botBustImage setTexture:[[CCSprite spriteWithFile:@"AsheBust.png"]texture]];
+		[botHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", botCurHealth, botMaxHealth]];
+		[botDeckLabel setString:[NSString stringWithFormat:@"%@: %u", botName, [botDeck count]]];
+	}
+	
+	if (characterSelected == @"Malphite") {
+		botName = @"Malphite";
+		botMaxHealth = 70;
+		botCurHealth = 70;
+		botDamageModifier = 1.5;
+		[botBustImage setTexture:[[CCSprite spriteWithFile:@"MalphiteBust.png"]texture]];
+		[botHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", botCurHealth, botMaxHealth]];
+		[botDeckLabel setString:[NSString stringWithFormat:@"%@: %u", botName, [botDeck count]]];
+	}
+	
+}
+
 - (void)tapDownAt:(CGPoint)location {
+	
 	CGSize winSize = [[CCDirector sharedDirector] winSize];
 	
 	CGRect rect = CGRectMake(38, 8, 64, 64);
@@ -239,8 +269,6 @@
 					slapButton.position = ccp(70, 40);
 					[self addChild:slapButton];
 					
-					//[self removeChild:cardBot cleanup:YES];
-					//[self removeChild:cardTop cleanup:YES];
 					[self cleanUpCardGraphics];
 					
 					int damage = [myDeck count];
@@ -263,6 +291,10 @@
 					topCurHealth = topCurHealth - damage;
 					[topHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", topCurHealth, topMaxHealth]];
 					[botHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", botCurHealth, botMaxHealth]];
+					float temp = topCurHealth * 100/topMaxHealth;
+					[topHealth setPercentage:temp];
+					temp = botCurHealth * 100/botMaxHealth;
+					[botHealth setPercentage:temp];
 					
 					NSLog (@"BOT SLAPS!");
 					NSLog (@"myDeck : %u", [myDeck count]);
@@ -272,7 +304,7 @@
 					[topDeckLabel setString:[NSString stringWithFormat:@"%@: %u", topName, [topDeck count]]];
 					[botDeckLabel setString:[NSString stringWithFormat:@"%@: %u", botName, [botDeck count]]];
 					[notificationLabel setString:[NSString stringWithFormat:@"%@ Slaps!", botName]];
-					[self performSelector:cleanUpNoticeSelector withObject:nil afterDelay:.5];
+					[self performSelector:@selector(cleanUpNotice) withObject:nil afterDelay:.5];
 					[self checkForGameOver];
 				}else{
 					
@@ -282,11 +314,15 @@
 					[topDeckLabel setString:[NSString stringWithFormat:@"%@: %u", topName, [topDeck count]]];
 					[botDeckLabel setString:[NSString stringWithFormat:@"%@: %u", botName, [botDeck count]]];
 					[notificationLabel setString:[NSString stringWithFormat:@"%@ PENALTY!", botName]];
-					[self performSelector:cleanUpNoticeSelector withObject:nil afterDelay:.5];
+					[self performSelector:@selector(cleanUpNotice) withObject:nil afterDelay:.5];
 					
 					botCurHealth = botCurHealth - 5;
 					[topHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", topCurHealth, topMaxHealth]];
 					[botHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", botCurHealth, botMaxHealth]];
+					float temp = topCurHealth * 100/topMaxHealth;
+					[topHealth setPercentage:temp];
+					temp = botCurHealth * 100/botMaxHealth;
+					[botHealth setPercentage:temp];
 					
 					NSLog (@"BOT PENALTY!");
 					NSLog (@"myDeck : %u", [myDeck count]);
@@ -301,8 +337,6 @@
 					slapButton.position = ccp(70, 40);
 					[self addChild:slapButton];
 					
-					//[self removeChild:cardBot cleanup:YES];
-					//[self removeChild:cardTop cleanup:YES];
 					[self cleanUpCardGraphics];
 					
 					int damage = [myDeck count];
@@ -326,7 +360,10 @@
 					
 					[topHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", topCurHealth, topMaxHealth]];
 					[botHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", botCurHealth, botMaxHealth]];
-					
+					float temp = topCurHealth * 100/topMaxHealth;
+					[topHealth setPercentage:temp];
+					temp = botCurHealth * 100/botMaxHealth;
+					[botHealth setPercentage:temp];
 					
 					NSLog (@"BOT SLAPS!");
 					NSLog (@"myDeck : %u", [myDeck count]);
@@ -335,7 +372,7 @@
 					[topDeckLabel setString:[NSString stringWithFormat:@"%@: %u", topName, [topDeck count]]];
 					[botDeckLabel setString:[NSString stringWithFormat:@"%@: %u", botName, [botDeck count]]];
 					[notificationLabel setString:[NSString stringWithFormat:@"%@ Slaps!", botName]];
-					[self performSelector:cleanUpNoticeSelector withObject:nil afterDelay:.5];
+					[self performSelector:@selector(cleanUpNotice) withObject:nil afterDelay:.5];
 					[self checkForGameOver];
 				}else{
 					
@@ -345,12 +382,16 @@
 					[topDeckLabel setString:[NSString stringWithFormat:@"%@: %u", topName, [topDeck count]]];
 					[botDeckLabel setString:[NSString stringWithFormat:@"%@: %u", botName, [botDeck count]]];
 					[notificationLabel setString:[NSString stringWithFormat:@"%@ PENALTY!", botName]];
-					[self performSelector:cleanUpNoticeSelector withObject:nil afterDelay:.5];
+					[self performSelector:@selector(cleanUpNotice) withObject:nil afterDelay:.5];
 					
 					botCurHealth = botCurHealth - 5;
 					
 					[topHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", topCurHealth, topMaxHealth]];
 					[botHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", botCurHealth, botMaxHealth]];
+					float temp = topCurHealth * 100/topMaxHealth;
+					[topHealth setPercentage:temp];
+					temp = botCurHealth * 100/botMaxHealth;
+					[botHealth setPercentage:temp];
 					
 					NSLog (@"BOT PENALTY!");
 					NSLog (@"myDeck : %u", [myDeck count]);
@@ -369,7 +410,7 @@
 		
 		NSLog (@"Pressed Flip");
 		
-		if (playerTurn == true && playerFlipButtonActive == true) {
+		if (playerTurn == true && playerFlipButtonActive == true && gameNotSetUp == false) {
 			//playerSlapped = true;
 			CGSize winSize = [[CCDirector sharedDirector] winSize];
 			[self removeChild:flipButton cleanup:YES];
@@ -385,6 +426,11 @@
 			
 	}
 	
+	if (gameNotSetUp) {
+		[self setUpGame];
+		gameNotSetUp = false;
+	}
+	
 
 }
 
@@ -394,6 +440,7 @@
 }
 
 - (void)tapUpAt:(CGPoint)location {
+	[self removeChild:loadingSplashScreen cleanup:YES];
 	
 	CGSize winSize = [[CCDirector sharedDirector] winSize];
 	
@@ -439,9 +486,27 @@
 - (void)checkForGameOver{
 	if (topCurHealth <= 0 || [topDeck count] == 0) {
 		//You Win.
-		GameOverScene *gameOverScene = [GameOverScene node];
-		[gameOverScene.layer.label setString:@"You Win!"];
-		[[CCDirector sharedDirector] replaceScene:gameOverScene];
+		CutSceneScene *nextScene = [CutSceneScene node];
+		if (characterSelected == @"Ashe") {
+			CGSize winSize = [[CCDirector sharedDirector] winSize];
+			
+			CCSprite* SplashScreen = [CCSprite spriteWithFile:@"AsheSplash.png"];
+			SplashScreen.position = ccp(winSize.width/2, winSize.height/2);
+			[self addChild:SplashScreen];
+			
+			[self performSelector:@selector(asheSelectedLoadCutScene) withObject:nil afterDelay:0.1];
+
+		}else{
+			CGSize winSize = [[CCDirector sharedDirector] winSize];
+			
+			CCSprite* SplashScreen = [CCSprite spriteWithFile:@"malphiteSplash.png"];
+			SplashScreen.position = ccp(winSize.width/2, winSize.height/2);
+			[self addChild:SplashScreen];
+			
+			[self performSelector:@selector(malphiteSelectedLoadCutScene) withObject:nil afterDelay:0.1];
+
+		}
+		[[CCDirector sharedDirector] replaceScene:nextScene];
 	}
 	if (botCurHealth <= 0 || [botDeck count] == 0) {
 		//You Lose.
@@ -450,6 +515,28 @@
 		[[CCDirector sharedDirector] replaceScene:gameOverScene];
 	}
 	
+}
+
+- (void) asheSelectedLoadCutScene{
+	CutSceneScene *gameScene = [CutSceneScene node];
+	
+	gameScene.layer.loadingSplashScreen = [CCSprite spriteWithFile:@"AsheSplashFinished.png"];
+	CGSize winSize = [[CCDirector sharedDirector] winSize];
+	gameScene.layer.loadingSplashScreen.position = ccp(winSize.width/2, winSize.height/2);
+	[gameScene.layer addChild:gameScene.layer.loadingSplashScreen];
+	gameScene.layer.CutSceneNumber = currentStageLevel + 2;
+	[[CCDirector sharedDirector] replaceScene:gameScene];
+}
+
+- (void) malphiteSelectedLoadCutScene{
+	CutSceneScene *gameScene = [CutSceneScene node];
+	
+	gameScene.layer.loadingSplashScreen = [CCSprite spriteWithFile:@"malphiteSplashFinished.png"];
+	CGSize winSize = [[CCDirector sharedDirector] winSize];
+	gameScene.layer.loadingSplashScreen.position = ccp(winSize.width/2, winSize.height/2);
+	[gameScene.layer addChild:gameScene.layer.loadingSplashScreen];
+	gameScene.layer.CutSceneNumber = currentStageLevel + 3;
+	[[CCDirector sharedDirector] replaceScene:gameScene];
 }
 
 - (void)cleanUpCardGraphics{
@@ -468,7 +555,7 @@
 	if (playerTurn == true) {
 		return;
 	}
-	[self performSelector:computerFlipCardSelector withObject:nil afterDelay:delay];
+	[self performSelector:@selector(computerFlipCard) withObject:nil afterDelay:delay];
 	return;
 }
 
@@ -501,10 +588,14 @@
 		
 		[topHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", topCurHealth, topMaxHealth]];
 		[botHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", botCurHealth, botMaxHealth]];
+		float temp = topCurHealth * 100/topMaxHealth;
+		[topHealth setPercentage:temp];
+		temp = botCurHealth * 100/botMaxHealth;
+		[botHealth setPercentage:temp];
 		
 		NSLog (@"TOP WINS!");
 		[notificationLabel setString:[NSString stringWithFormat:@"%@ Wins!", topName]];
-		[self performSelector:cleanUpNoticeSelector withObject:nil afterDelay:.5];
+		[self performSelector:@selector(cleanUpNotice) withObject:nil afterDelay:.5];
 		[self checkForGameOver];
 	}else{
 		int damage = [myDeck count];
@@ -517,10 +608,14 @@
 		
 		[topHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", topCurHealth, topMaxHealth]];
 		[botHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", botCurHealth, botMaxHealth]];
+		float temp = topCurHealth * 100/topMaxHealth;
+		[topHealth setPercentage:temp];
+		temp = botCurHealth * 100/botMaxHealth;
+		[botHealth setPercentage:temp];
 		
 		NSLog (@"BOT WINS!");
 		[notificationLabel setString:[NSString stringWithFormat:@"%@ Wins!", botName]];
-		[self performSelector:cleanUpNoticeSelector withObject:nil afterDelay:.5];
+		[self performSelector:@selector(cleanUpNotice) withObject:nil afterDelay:.5];
 		[self checkForGameOver];
 	}
 	
@@ -576,11 +671,15 @@
 		
 		[topHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", topCurHealth, topMaxHealth]];
 		[botHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", botCurHealth, botMaxHealth]];
+		float temp = topCurHealth * 100/topMaxHealth;
+		[topHealth setPercentage:temp];
+		temp = botCurHealth * 100/botMaxHealth;
+		[botHealth setPercentage:temp];
 		
 		[myDeck removeAllObjects];
 		NSLog (@"TOP SLAPS!");
 		[notificationLabel setString:[NSString stringWithFormat:@"%@ Slaps!", topName]];
-		[self performSelector:cleanUpNoticeSelector withObject:nil afterDelay:.5];
+		[self performSelector:@selector(cleanUpNotice) withObject:nil afterDelay:.5];
 		
 		NSLog (@"myDeck : %u", [myDeck count]);
 		NSLog (@"topDeck: %u", [topDeck count]);
@@ -594,7 +693,7 @@
 		playerTurn = false;
 		[turnLabel setString:@"< turn  "];
 		
-		[self computerTurn];
+		[self performSelector:@selector(computerTurn) withObject:nil afterDelay:.7];
 	}
 	
 }
@@ -639,7 +738,7 @@
 		cardBot.position = ccp( winSize.width/2, winSize.height/2 );
 		cardBot.rotation = cardAngle;
 		cardAngle =  cardAngle + 60;
-		if(cardAngle == 180){
+		if(cardAngle == 360){
 			cardAngle = 0;
 		}
 		[cardStackGraphics addObject:cardBot];
@@ -657,14 +756,14 @@
 				if ([topCard characterAtIndex:1] == [secCard characterAtIndex:1]  || [topCard characterAtIndex:1] == [trdCard characterAtIndex:1]) {
 					
 					isSlapable = true;
-					[self performSelector:compSlapCardSelector withObject:nil afterDelay:delay*0.7];
+					[self performSelector:@selector(compSlapCard) withObject:nil afterDelay:delay*0.7];
 			
 				}
 			}else{
 				if ([topCard characterAtIndex:1] == [secCard characterAtIndex:1]) {
 					
 					isSlapable = true;
-					[self performSelector:compSlapCardSelector withObject:nil afterDelay:delay*0.7];
+					[self performSelector:@selector(compSlapCard) withObject:nil afterDelay:delay*0.7];
 					
 				}
 			}
@@ -673,7 +772,7 @@
 		
 		if (turnCount == 0 && royalPlayed == true && playedRoyal == false && isSlapable == false) {
 			playerFlipButtonActive = false;
-			[self performSelector:royalCardCollectSelector withObject:nil afterDelay:delay/2];
+			[self performSelector:@selector(royalCardCollect) withObject:nil afterDelay:delay/2];
 		}
 		
 	}else{
@@ -711,7 +810,7 @@
 		cardTop.position = ccp( winSize.width/2, winSize.height/2 );
 		cardTop.rotation = cardAngle;
 		cardAngle = cardAngle + 60;
-		if(cardAngle == 180){
+		if(cardAngle == 360){
 			cardAngle = 0;
 		}
 		[cardStackGraphics addObject:cardTop];
@@ -728,14 +827,14 @@
 				if ([topCard characterAtIndex:1] == [secCard characterAtIndex:1]  || [topCard characterAtIndex:1] == [trdCard characterAtIndex:1]) {
 					
 					isSlapable = true;
-					[self performSelector:compSlapCardSelector withObject:nil afterDelay:delay];
+					[self performSelector:@selector(compSlapCard) withObject:nil afterDelay:delay];
 					
 				}
 			}else{
 				if ([topCard characterAtIndex:1] == [secCard characterAtIndex:1]) {
 					
 					isSlapable = true;
-					[self performSelector:compSlapCardSelector withObject:nil afterDelay:delay];
+					[self performSelector:@selector(compSlapCard) withObject:nil afterDelay:delay];
 					
 				}
 			}
@@ -744,7 +843,7 @@
 		
 		if (turnCount == 1 && royalPlayed == true && playedRoyal == false && isSlapable == false) {
 			playerFlipButtonActive = false;
-			[self performSelector:royalCardCollectSelector withObject:nil afterDelay:delay/2];
+			[self performSelector:@selector(royalCardCollect) withObject:nil afterDelay:delay/2];
 		}
 		
 	}

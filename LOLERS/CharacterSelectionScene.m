@@ -8,11 +8,15 @@
 
 #import "CharacterSelectionScene.h"
 #import "ErsGameScene.h"
+#import "CutScene.h"
 
 @interface CharacterSelectionScene()
 
-- (void) ascheSelected: (CCMenuItem  *) menuItem;
+- (void) asheSelected: (CCMenuItem  *) menuItem;
 - (void) malphiteSelected: (CCMenuItem  *) menuItem;
+- (void) asheSelected2;
+- (void) malphiteSelected2;
+
 
 @end
 
@@ -37,10 +41,10 @@
 {
 	if( (self=[super initWithColor:ccc4(255, 255,0,255)] )) {
 		
-		CCMenuItemImage * asheSelect = [CCMenuItemImage itemFromNormalImage:@"AscheButton.png"
-																   selectedImage: @"AscheButton_selected.png"
+		CCMenuItemImage * asheSelect = [CCMenuItemImage itemFromNormalImage:@"AsheButton.png"
+																   selectedImage: @"AsheButton_selected.png"
 																		  target:self
-																		selector:@selector(ascheSelected:)];
+																		selector:@selector(asheSelected:)];
 		
 		CCMenuItemImage * malphiteSelect = [CCMenuItemImage itemFromNormalImage:@"MalphiteButton.png"
 																   selectedImage: @"MalphiteButton_selected.png"
@@ -57,54 +61,54 @@
 	return self;
 }
 
-- (void) ascheSelected: (CCMenuItem  *) menuItem 
+- (void) asheSelected: (CCMenuItem  *) menuItem 
 {
 	NSLog(@"new game was selected");
+	CGSize winSize = [[CCDirector sharedDirector] winSize];
 	
-	ErsGameScene *gameScene = [ErsGameScene node];
+	CCSprite* SplashScreen = [CCSprite spriteWithFile:@"AsheSplash.png"];
+	SplashScreen.position = ccp(winSize.width/2, winSize.height/2);
+	[self addChild:SplashScreen];
 	
-	gameScene.layer.topName = @"Minion";
-	gameScene.layer.topMaxHealth = 50;
-	gameScene.layer.topCurHealth = 50;
-	gameScene.layer.topDamageModifier = 2;
+	[self performSelector:@selector(asheSelected2) withObject:nil afterDelay:0.1];
+
+}
+
+- (void) asheSelected2{
+	CutSceneScene *gameScene = [CutSceneScene node];
 	
-	gameScene.layer.botName = @"Ashe";
-	gameScene.layer.botMaxHealth = 40;
-	gameScene.layer.botCurHealth = 40;
-	gameScene.layer.botDamageModifier = 2.5;
-	
-	[gameScene.layer.topHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", gameScene.layer.topCurHealth, gameScene.layer.topMaxHealth]];
-	[gameScene.layer.botHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", gameScene.layer.botCurHealth, gameScene.layer.botMaxHealth]];
-	[gameScene.layer.topDeckLabel setString:[NSString stringWithFormat:@"%@: %u", gameScene.layer.topName, [gameScene.layer.topDeck count]]];
-	[gameScene.layer.botDeckLabel setString:[NSString stringWithFormat:@"%@: %u", gameScene.layer.botName, [gameScene.layer.botDeck count]]];
-	
+	gameScene.layer.loadingSplashScreen = [CCSprite spriteWithFile:@"AsheSplashFinished.png"];
+	CGSize winSize = [[CCDirector sharedDirector] winSize];
+	gameScene.layer.loadingSplashScreen.position = ccp(winSize.width/2, winSize.height/2);
+	[gameScene.layer addChild:gameScene.layer.loadingSplashScreen];
+	gameScene.layer.CutSceneNumber = 1;
 	[[CCDirector sharedDirector] replaceScene:gameScene];
-	
 }
 
 - (void) malphiteSelected: (CCMenuItem  *) menuItem 
 {
 	NSLog(@"new game was selected");
 	
-	ErsGameScene *gameScene = [ErsGameScene node];
+	CGSize winSize = [[CCDirector sharedDirector] winSize];
 	
-	gameScene.layer.topName = @"Minion";
-	gameScene.layer.topMaxHealth = 50;
-	gameScene.layer.topCurHealth = 50;
-	gameScene.layer.topDamageModifier = 2;
+	CCSprite* SplashScreen = [CCSprite spriteWithFile:@"malphiteSplash.png"];
+	SplashScreen.position = ccp(winSize.width/2, winSize.height/2);
+	[self addChild:SplashScreen];
 	
-	gameScene.layer.botName = @"Malphite";
-	gameScene.layer.botMaxHealth = 65;
-	gameScene.layer.botCurHealth = 65;
-	gameScene.layer.botDamageModifier = 1.8;
+	[self performSelector:@selector(malphiteSelected2) withObject:nil afterDelay:0.1];
+
 	
-	[gameScene.layer.topHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", gameScene.layer.topCurHealth, gameScene.layer.topMaxHealth]];
-	[gameScene.layer.botHealthLabel setString:[NSString stringWithFormat:@"[%d / %d]", gameScene.layer.botCurHealth, gameScene.layer.botMaxHealth]];
-	[gameScene.layer.topDeckLabel setString:[NSString stringWithFormat:@"%@: %u", gameScene.layer.topName, [gameScene.layer.topDeck count]]];
-	[gameScene.layer.botDeckLabel setString:[NSString stringWithFormat:@"%@: %u", gameScene.layer.botName, [gameScene.layer.botDeck count]]];
+}
+
+- (void) malphiteSelected2{
+	CutSceneScene *gameScene = [CutSceneScene node];
 	
+	gameScene.layer.loadingSplashScreen = [CCSprite spriteWithFile:@"malphiteSplashFinished.png"];
+	CGSize winSize = [[CCDirector sharedDirector] winSize];
+	gameScene.layer.loadingSplashScreen.position = ccp(winSize.width/2, winSize.height/2);
+	[gameScene.layer addChild:gameScene.layer.loadingSplashScreen];
+	gameScene.layer.CutSceneNumber = 2;
 	[[CCDirector sharedDirector] replaceScene:gameScene];
-	
 }
 
 - (void)registerWithTouchDispatcher {

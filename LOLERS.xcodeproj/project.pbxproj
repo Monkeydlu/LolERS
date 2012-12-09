@@ -15,11 +15,13 @@
 		0045419A1663223C00957BCD /* CharacterSelectionScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 004541991663223C00957BCD /* CharacterSelectionScene.m */; };
 		0045419D166324E600957BCD /* NewGameButton_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 0045419B166324E600957BCD /* NewGameButton_selected.png */; };
 		0045419E166324E600957BCD /* NewGameButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 0045419C166324E600957BCD /* NewGameButton.png */; };
-		004541A5166363CC00957BCD /* AscheButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 004541A3166363CC00957BCD /* AscheButton.png */; };
+		004541A5166363CC00957BCD /* AsheButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 004541A3166363CC00957BCD /* AsheButton.png */; };
 		004541A6166363CC00957BCD /* MalphiteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 004541A4166363CC00957BCD /* MalphiteButton.png */; };
 		004541A9166363F200957BCD /* MalphiteButton_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 004541A7166363F200957BCD /* MalphiteButton_selected.png */; };
-		004541AA166363F200957BCD /* AscheButton_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 004541A8166363F200957BCD /* AscheButton_selected.png */; };
+		004541AA166363F200957BCD /* AsheButton_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 004541A8166363F200957BCD /* AsheButton_selected.png */; };
 		004541AD1663682F00957BCD /* GameOverScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 004541AC1663682F00957BCD /* GameOverScene.m */; };
+		0073C1EF166C6CA10054B951 /* CutScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 0073C1EE166C6CA10054B951 /* CutScene.m */; };
+		0073C1F2166C74000054B951 /* healthBarGreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 0073C1F1166C74000054B951 /* healthBarGreen.png */; };
 		009F5DC916373BC20082FBF6 /* flip.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 009F5DC816373BC20082FBF6 /* flip.jpeg */; };
 		009F5DCC16373BC90082FBF6 /* slap.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 009F5DCB16373BC90082FBF6 /* slap.jpeg */; };
 		009F5E0516379B680082FBF6 /* click.caf in Resources */ = {isa = PBXBuildFile; fileRef = 009F5E0416379B680082FBF6 /* click.caf */; };
@@ -192,6 +194,13 @@
 		00C6D1E816238657005D718C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C6D1E716238657005D718C /* AppDelegate.m */; };
 		00C6D1EB16238657005D718C /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C6D1EA16238657005D718C /* RootViewController.m */; };
 		00C6D1EE16238657005D718C /* ErsGameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 00C6D1ED16238657005D718C /* ErsGameScene.m */; };
+		00EFA7961673FB8C0021FE23 /* AsheSplash.png in Resources */ = {isa = PBXBuildFile; fileRef = 00EFA7941673FB8C0021FE23 /* AsheSplash.png */; };
+		00EFA7971673FB8C0021FE23 /* AsheSplashFinished.png in Resources */ = {isa = PBXBuildFile; fileRef = 00EFA7951673FB8C0021FE23 /* AsheSplashFinished.png */; };
+		00EFA7A2167456F70021FE23 /* MalphiteSplash.png in Resources */ = {isa = PBXBuildFile; fileRef = 00EFA7A0167456F70021FE23 /* MalphiteSplash.png */; };
+		00EFA7A3167456F70021FE23 /* MalphiteSplashFinished.png in Resources */ = {isa = PBXBuildFile; fileRef = 00EFA7A1167456F70021FE23 /* MalphiteSplashFinished.png */; };
+		00EFA7A6167491340021FE23 /* MalphiteBust.png in Resources */ = {isa = PBXBuildFile; fileRef = 00EFA7A4167491330021FE23 /* MalphiteBust.png */; };
+		00EFA7A7167491340021FE23 /* AsheBust.png in Resources */ = {isa = PBXBuildFile; fileRef = 00EFA7A5167491340021FE23 /* AsheBust.png */; };
+		00EFA7A9167492120021FE23 /* MinionBust.png in Resources */ = {isa = PBXBuildFile; fileRef = 00EFA7A8167492120021FE23 /* MinionBust.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -205,12 +214,15 @@
 		004541991663223C00957BCD /* CharacterSelectionScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CharacterSelectionScene.m; sourceTree = "<group>"; };
 		0045419B166324E600957BCD /* NewGameButton_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NewGameButton_selected.png; sourceTree = "<group>"; };
 		0045419C166324E600957BCD /* NewGameButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NewGameButton.png; sourceTree = "<group>"; };
-		004541A3166363CC00957BCD /* AscheButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AscheButton.png; sourceTree = "<group>"; };
+		004541A3166363CC00957BCD /* AsheButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AsheButton.png; sourceTree = "<group>"; };
 		004541A4166363CC00957BCD /* MalphiteButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MalphiteButton.png; sourceTree = "<group>"; };
 		004541A7166363F200957BCD /* MalphiteButton_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MalphiteButton_selected.png; sourceTree = "<group>"; };
-		004541A8166363F200957BCD /* AscheButton_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AscheButton_selected.png; sourceTree = "<group>"; };
+		004541A8166363F200957BCD /* AsheButton_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AsheButton_selected.png; sourceTree = "<group>"; };
 		004541AB1663682F00957BCD /* GameOverScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameOverScene.h; sourceTree = "<group>"; };
 		004541AC1663682F00957BCD /* GameOverScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameOverScene.m; sourceTree = "<group>"; };
+		0073C1ED166C6CA10054B951 /* CutScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CutScene.h; sourceTree = "<group>"; };
+		0073C1EE166C6CA10054B951 /* CutScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CutScene.m; sourceTree = "<group>"; };
+		0073C1F1166C74000054B951 /* healthBarGreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = healthBarGreen.png; sourceTree = "<group>"; };
 		009F5DC816373BC20082FBF6 /* flip.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = flip.jpeg; sourceTree = "<group>"; };
 		009F5DCB16373BC90082FBF6 /* slap.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = slap.jpeg; sourceTree = "<group>"; };
 		009F5E0416379B680082FBF6 /* click.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = click.caf; sourceTree = "<group>"; };
@@ -504,6 +516,13 @@
 		00C6D1EC16238657005D718C /* ErsGameScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ErsGameScene.h; sourceTree = "<group>"; };
 		00C6D1ED16238657005D718C /* ErsGameScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ErsGameScene.m; sourceTree = "<group>"; };
 		00C6D1EF16238657005D718C /* GameConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameConfig.h; sourceTree = "<group>"; };
+		00EFA7941673FB8C0021FE23 /* AsheSplash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AsheSplash.png; sourceTree = "<group>"; };
+		00EFA7951673FB8C0021FE23 /* AsheSplashFinished.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AsheSplashFinished.png; sourceTree = "<group>"; };
+		00EFA7A0167456F70021FE23 /* MalphiteSplash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MalphiteSplash.png; sourceTree = "<group>"; };
+		00EFA7A1167456F70021FE23 /* MalphiteSplashFinished.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MalphiteSplashFinished.png; sourceTree = "<group>"; };
+		00EFA7A4167491330021FE23 /* MalphiteBust.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MalphiteBust.png; sourceTree = "<group>"; };
+		00EFA7A5167491340021FE23 /* AsheBust.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AsheBust.png; sourceTree = "<group>"; };
+		00EFA7A8167492120021FE23 /* MinionBust.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MinionBust.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -587,8 +606,16 @@
 		00B802581649B94C001B2F66 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
-				004541A3166363CC00957BCD /* AscheButton.png */,
-				004541A8166363F200957BCD /* AscheButton_selected.png */,
+				00EFA7941673FB8C0021FE23 /* AsheSplash.png */,
+				00EFA7951673FB8C0021FE23 /* AsheSplashFinished.png */,
+				00EFA7A0167456F70021FE23 /* MalphiteSplash.png */,
+				00EFA7A1167456F70021FE23 /* MalphiteSplashFinished.png */,
+				00EFA7A4167491330021FE23 /* MalphiteBust.png */,
+				00EFA7A5167491340021FE23 /* AsheBust.png */,
+				00EFA7A8167492120021FE23 /* MinionBust.png */,
+				0073C1F1166C74000054B951 /* healthBarGreen.png */,
+				004541A3166363CC00957BCD /* AsheButton.png */,
+				004541A8166363F200957BCD /* AsheButton_selected.png */,
 				004541A4166363CC00957BCD /* MalphiteButton.png */,
 				004541A7166363F200957BCD /* MalphiteButton_selected.png */,
 				0045419B166324E600957BCD /* NewGameButton_selected.png */,
@@ -663,10 +690,12 @@
 				0045419516630CDE00957BCD /* StartScreenScene.m */,
 				00C6D1EC16238657005D718C /* ErsGameScene.h */,
 				00C6D1ED16238657005D718C /* ErsGameScene.m */,
-				004541AB1663682F00957BCD /* GameOverScene.h */,
-				004541AC1663682F00957BCD /* GameOverScene.m */,
+				0073C1ED166C6CA10054B951 /* CutScene.h */,
+				0073C1EE166C6CA10054B951 /* CutScene.m */,
 				004541981663223C00957BCD /* CharacterSelectionScene.h */,
 				004541991663223C00957BCD /* CharacterSelectionScene.m */,
+				004541AB1663682F00957BCD /* GameOverScene.h */,
+				004541AC1663682F00957BCD /* GameOverScene.m */,
 				00C6D1EF16238657005D718C /* GameConfig.h */,
 				00C6D09216238655005D718C /* Resources */,
 				00C6D0A616238655005D718C /* libs */,
@@ -1122,10 +1151,18 @@
 				00BDA923165F495A0007ED81 /* Buzzer.mp3 in Resources */,
 				0045419D166324E600957BCD /* NewGameButton_selected.png in Resources */,
 				0045419E166324E600957BCD /* NewGameButton.png in Resources */,
-				004541A5166363CC00957BCD /* AscheButton.png in Resources */,
+				004541A5166363CC00957BCD /* AsheButton.png in Resources */,
 				004541A6166363CC00957BCD /* MalphiteButton.png in Resources */,
 				004541A9166363F200957BCD /* MalphiteButton_selected.png in Resources */,
-				004541AA166363F200957BCD /* AscheButton_selected.png in Resources */,
+				004541AA166363F200957BCD /* AsheButton_selected.png in Resources */,
+				0073C1F2166C74000054B951 /* healthBarGreen.png in Resources */,
+				00EFA7961673FB8C0021FE23 /* AsheSplash.png in Resources */,
+				00EFA7971673FB8C0021FE23 /* AsheSplashFinished.png in Resources */,
+				00EFA7A2167456F70021FE23 /* MalphiteSplash.png in Resources */,
+				00EFA7A3167456F70021FE23 /* MalphiteSplashFinished.png in Resources */,
+				00EFA7A6167491340021FE23 /* MalphiteBust.png in Resources */,
+				00EFA7A7167491340021FE23 /* AsheBust.png in Resources */,
+				00EFA7A9167492120021FE23 /* MinionBust.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1238,6 +1275,7 @@
 				0045419616630CDE00957BCD /* StartScreenScene.m in Sources */,
 				0045419A1663223C00957BCD /* CharacterSelectionScene.m in Sources */,
 				004541AD1663682F00957BCD /* GameOverScene.m in Sources */,
+				0073C1EF166C6CA10054B951 /* CutScene.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

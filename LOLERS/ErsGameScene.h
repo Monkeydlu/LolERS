@@ -23,6 +23,9 @@
 	CCSprite *slapButton;
 	CCSprite *flipButtonTop;
 	CCSprite *slapButtonTop;
+	CCSprite *loadingSplashScreen;
+	CCSprite *topBustImage;
+	CCSprite *botBustImage;
 	CCLabelTTF * topDeckLabel;
 	CCLabelTTF * botDeckLabel;
 	CCLabelTTF * turnLabel;
@@ -34,10 +37,7 @@
 	bool royalPlayed;
 	bool playerSlapped;
 	bool playerFlipButtonActive;
-	SEL computerFlipCardSelector;
-	SEL royalCardCollectSelector;
-	SEL compSlapCardSelector;
-	SEL cleanUpNoticeSelector;
+	bool gameNotSetUp;
 	float cardAngle;
 	double delay;
 	int topMaxHealth;
@@ -48,26 +48,14 @@
 	float botDamageModifier;
 	NSString * topName;
 	NSString * botName;
+	CCProgressTimer *botHealth;
+	CCProgressTimer *topHealth;
+	NSString * characterSelected;
+	int currentStageLevel;
 }
-@property NSMutableArray *topDeck;
-@property NSMutableArray *botDeck;
-@property int topMaxHealth;
-@property int botMaxHealth;
-@property int topCurHealth;
-@property int botCurHealth;
-@property CCLabelTTF * topHealthLabel;
-@property CCLabelTTF * botHealthLabel;
-@property CCLabelTTF * topDeckLabel;
-@property CCLabelTTF * botDeckLabel;
-@property float topDamageModifier;
-@property float botDamageModifier;
-@property NSString * topName;
-@property NSString * botName;
-
-
-// returns a CCScene that contains the ErsGameScene as the only child
-//+(CCScene *) scene;
-
+@property (retain) CCSprite * loadingSplashScreen;
+@property (retain) NSString * characterSelected;
+@property int currentStageLevel;
 @end
 
 
